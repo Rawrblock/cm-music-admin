@@ -1,20 +1,29 @@
 // 1. 引入vue-router
-import { createRouter, createWebHashHistory } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router";
+
+export const menuRoutes = [
+  {
+    // 主页
+    path: "dashboard",
+    name: "Dashboard",
+    meta: { title: "控制台", icon: "dashboard" },
+    component: () => import("../pages/dashboard/Index.vue")
+  },
+  {
+    path: "user",
+    name: "User",
+    meta: { title: "用户管理", icon: "manage_accounts" },
+    component: () => import("../pages/user/Index.vue")
+  }
+];
 
 // 2. 配置路由页面规则
 const routes = [
   {
-    // 布局框架页面
     path: "/",
     component: () => import("../pages/Layout.vue"),
-    redirect: "index",
-    children: [
-      {
-        // 主页
-        path: "index",
-        component: () => import("../pages/index/Index.vue")
-      }
-    ]
+    redirect: "dashboard",
+    children: menuRoutes
   },
   {
     // 登录
@@ -31,13 +40,13 @@ const routes = [
     path: "/:pathMatch(.*)",
     component: () => import("../pages/404.vue")
   }
-]
+];
 
 // 3. 创建路由
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
 // 4. 暴露router
-export default router
+export default router;
