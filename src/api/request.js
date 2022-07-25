@@ -30,15 +30,22 @@ instance.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    store.dispatch("user/logout");
-    Notify.create({
-      type: "negative",
-      message: error.message,
-      position: "top"
-    });
+    handlerErrorResponse(error.response);
     return Promise.reject(error);
   }
 );
+
+// 全局处理错误
+const handlerErrorResponse = (response) => {
+  if (response.status === 401 || response.status === 403) {
+    store.dispatch("logout").then(() => window.location.reload());
+  }
+  Notify.create({
+    type: "negative",
+    message: response.data.message,
+    position: "top"
+  });
+};
 
 const { get, post, put } = instance;
 

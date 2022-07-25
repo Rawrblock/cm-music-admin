@@ -34,10 +34,10 @@ export default {
     const data = ref([]);
     const fetchData = () => {
       search({ page: 0 }).then((res) => {
-        data.value = data.value.concat(res.data.content);
-        pagination.value.page = res.data.number + 1;
-        pagination.value.rowsPerPage = res.data.size;
-        pagination.value.rowsNumber = res.data.totalElements;
+        data.value = data.value.concat(res.content);
+        pagination.value.page = res.number + 1;
+        pagination.value.rowsPerPage = res.size;
+        pagination.value.rowsNumber = res.totalElements;
       });
     };
     fetchData();

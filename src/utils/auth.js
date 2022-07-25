@@ -4,6 +4,12 @@ import Cookies from "js-cookie";
 const TokenKey = "token";
 const UserKey = "current-user";
 
+const defaultUser = {
+  username: null,
+  password: null,
+  role: []
+};
+
 // 获取token
 export const getToken = () => {
   return Cookies.get(TokenKey);
@@ -22,7 +28,7 @@ export const removeToken = () => {
 // 获取当前用户信息
 export const getCurrentUser = () => {
   const user = Cookies.get(UserKey);
-  return user === undefined ? null : JSON.parse(Cookies.get(UserKey));
+  return user === undefined ? defaultUser : JSON.parse(user);
 };
 
 // 存储当前用户信息

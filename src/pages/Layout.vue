@@ -7,7 +7,17 @@
         <q-toolbar-title> 村民音乐 </q-toolbar-title>
 
         <q-space />
-        <q-avatar color="teal" text-color="white">{{ nicknameFirstWord }}</q-avatar>
+        <!-- 头像组件 -->
+        <q-avatar color="teal" text-color="white">
+          {{ nicknameFirstWord }}
+          <q-menu fit>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup @click="logout()">
+                <q-item-section>退出登录</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
       </q-toolbar>
     </q-header>
 
@@ -55,7 +65,8 @@ export default {
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
-      nicknameFirstWord: computed(() => store.getters.nicknameFirstWord)
+      nicknameFirstWord: computed(() => store.getters.nicknameFirstWord),
+      logout: () => store.dispatch("logout").then(() => window.location.reload())
     };
   }
 };

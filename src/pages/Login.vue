@@ -52,9 +52,10 @@ export default {
     // 登录方法
     const onSubmit = () => {
       store.dispatch("toLogin", user).then(() => {
-        console.log(store);
-        store.dispatch("fetchCurrentUser");
-        router.push({ path: route.query.redirect || "/" });
+        // 触发获取当前用户信息方法
+        store.dispatch("fetchCurrentUser").then(() => {
+          router.push({ path: route.query.redirect || "/" });
+        });
       });
     };
 
