@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store";
-import { Notify } from "quasar";
+import notify from "../utils/notify";
 
 // 定义baseURL 使用.env文件
 const baseURL = import.meta.env.VITE_API_HOST;
@@ -27,6 +27,10 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
+    if (response.data.code) {
+      handlerErrorResponse(response);
+      return Promise.reject(response.data);
+    }
     return response.data;
   },
   (error) => {
@@ -40,11 +44,14 @@ const handlerErrorResponse = (response) => {
   if (response.status === 401 || response.status === 403) {
     store.dispatch("logout").then(() => window.location.reload());
   }
-  Notify.create({
-    type: "negative",
-    message: response.data.message,
-    position: "top"
-  });
+  // 如果返回的结果是数组
+  if (response.data instanceof Array) {
+    response.data.forEach((item) => {
+      notify.error(item.message);
+    });
+  } else {
+    notify.error(response.data.message);
+  }
 };
 
 const { get, post, put } = instance;

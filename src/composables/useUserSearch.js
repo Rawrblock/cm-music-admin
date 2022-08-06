@@ -4,30 +4,34 @@ import { search } from "../api/user";
 export const useUserSearch = () => {
   const data = ref([]);
   const pagination = ref({
-    page: 2,
-    rowsPerPage: 10,
-    rowsNumber: 10
+    // 当前页
+    page: 0,
+    // 页大小
+    rowsPerPage: 10
   });
 
   // 获取数据
   const fetchData = () => {
-    search({ page: 0 }).then((res) => {
-      data.value = data.value.concat(res.content);
+    const pageConfig = {
+      page: pagination.value.page - 1,
+      size: pagination.value.rowsPerPage
+    };
+    search(pageConfig).then((res) => {
+      // 数据
+      data.value = res.content;
+      // 更新当前页
       pagination.value.page = res.number + 1;
+      // 更新 页大小
       pagination.value.rowsPerPage = res.size;
-      pagination.value.rowsNumber = res.totalElements;
+      // pagination.value.rowsNumber = res.totalElements;
     });
   };
-
-  // 计算页数
-  const pagesNumber = computed(() => Math.ceil(data.value.length / pagination.value.rowsPerPage));
 
   onMounted(fetchData);
 
   return {
     data,
     pagination,
-    pagesNumber,
     fetchData
   };
 };

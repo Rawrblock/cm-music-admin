@@ -1,14 +1,17 @@
 <template>
   <div class="page">
     <div class="q-mt-md q-mb-md">
-      <q-btn color="primary" label="添加用户" @click="toggleDialog" />
+      <q-btn color="primary" label="添加用户" @click="showDialog" />
     </div>
-    <q-table :rows="data" :columns="columns" row-key="name" hide-pagination />
 
-    <div class="row justify-center q-mt-md">
-      <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
-    </div>
-    <create-dialog v-if="showDialog" @hide="toggleDialog" />
+    <q-table
+      :rows="data"
+      :columns="columns"
+      row-key="name"
+      v-model:pagination="pagination"
+      @update:pagination="fetchData" />
+
+    <create-dialog v-if="show" @hide="hideDialog" @create-success="fetchData" />
   </div>
 </template>
 
@@ -24,9 +27,11 @@ const columns = [
   { field: "nickname", label: "昵称" }
 ];
 // 控制弹出组件
-const showDialog = ref(false);
+const show = ref(false);
 
-const { toggleDialog } = useToggleDialog(showDialog);
+const { showDialog, hideDialog } = useToggleDialog(show);
+
+// 用户列表查询
 const { data, pagination, pagesNumber, fetchData } = useUserSearch();
 </script>
 
